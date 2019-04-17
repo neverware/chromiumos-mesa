@@ -2114,18 +2114,7 @@ const struct tgsi_token *ureg_finalize( struct ureg_program *ureg )
    }
 
 #if DEBUG
-   /* tgsi_sanity doesn't seem to return if there are too many constants. */
-   bool too_many_constants = false;
-   for (unsigned i = 0; i < ARRAY_SIZE(ureg->const_decls); i++) {
-      for (unsigned j = 0; j < ureg->const_decls[i].nr_constant_ranges; j++) {
-         if (ureg->const_decls[i].constant_range[j].last > 4096) {
-            too_many_constants = true;
-            break;
-         }
-      }
-   }
-
-   if (tokens && !too_many_constants && !tgsi_sanity_check(tokens)) {
+   if (tokens && !tgsi_sanity_check(tokens)) {
       debug_printf("tgsi_ureg.c, sanity check failed on generated tokens:\n");
       tgsi_dump(tokens, 0);
       assert(0);
