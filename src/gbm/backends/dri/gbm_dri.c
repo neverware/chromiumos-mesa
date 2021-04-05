@@ -477,7 +477,9 @@ is_gbm_debug() {
 }
 
 static bool
-is_force_gbm_software(const char *driver_name) {
+is_force_gbm_software(const char *driver_name, int fd) {
+   int vendor_id;
+   int chip_id;
    // Check if the the driver name should be quirked to force
    // the use of kms_swrast instead of the dri driver.
    // Can be overridden with the GBM_ALWAYS_SOFTWARE
@@ -489,6 +491,12 @@ is_force_gbm_software(const char *driver_name) {
       // The default is ignored as getenv checked that it
       // has been set.
       return env_var_as_boolean("GBM_ALWAYS_SOFTWARE", false);
+
+   // Restrict specific i915 chipset for Zotac devices [OVER-13797].
+   if (loader_get_pci_id_for_fd(fd, &vendor_id, &chip_id)) {
+      if (vendor_id == 0x8086 && chip_id == 0x5a85)
+        return true;
+   }
 
    // Restrict all nvidia (nouveau) [OVER-9944] and
    // AMD [OVER-5884, OVER-5386] drivers to software.
@@ -509,7 +517,7 @@ dri_screen_create(struct gbm_dri_device *dri)
    if (!driver_name)
       return -1;
 
-   if (is_force_gbm_software(driver_name)) {
+   if (is_force_gbm_software(driver_name, dri->base.fd)) {
       if (is_gbm_debug())
          fprintf(stderr, "GBM debug: Forcing kms_swrast for %s.\n", driver_name);
       free(driver_name);
