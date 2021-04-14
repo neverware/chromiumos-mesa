@@ -179,6 +179,7 @@ enum gbm_bo_format {
 #define GBM_FORMAT_NV16		__gbm_fourcc_code('N', 'V', '1', '6') /* 2x1 subsampled Cr:Cb plane */
 #define GBM_FORMAT_NV61		__gbm_fourcc_code('N', 'V', '6', '1') /* 2x1 subsampled Cb:Cr plane */
 
+#define GBM_FORMAT_P010         __gbm_fourcc_code('P', '0', '1', '0') /* 2x2 subsampled Cr:Cb plane */
 /*
  * 3 plane YCbCr
  * index 0: Y plane, [7:0] Y
@@ -431,6 +432,9 @@ uint64_t
 gbm_bo_get_plane_format_modifier(struct gbm_bo *bo, size_t plane);
 
 // (end) Neverware
+
+int
+gbm_bo_get_fd_for_plane(struct gbm_bo *bo, int plane);
 
 int
 gbm_bo_write(struct gbm_bo *bo, const void *buf, size_t count);
