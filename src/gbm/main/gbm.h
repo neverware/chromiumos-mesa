@@ -297,7 +297,8 @@ gbm_bo_create_with_modifiers(struct gbm_device *gbm,
 #define GBM_BO_IMPORT_WL_BUFFER         0x5501
 #define GBM_BO_IMPORT_EGL_IMAGE         0x5502
 #define GBM_BO_IMPORT_FD                0x5503
-#define GBM_BO_IMPORT_FD_MODIFIER       0x5504
+#define GBM_BO_IMPORT_FD_PLANAR         0x5504
+#define GBM_BO_IMPORT_FD_MODIFIER       0x5505
 
 struct gbm_import_fd_data {
    int fd;
